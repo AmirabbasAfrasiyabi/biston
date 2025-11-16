@@ -121,3 +121,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Google reCAPTCHA Settings (for development)
+RECAPTCHA_SECRET_KEY = 'development-test-key'
+RECAPTCHA_SITE_KEY = 'development-test-key'
