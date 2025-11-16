@@ -1,0 +1,41 @@
+{% extends "template.html"%}
+{% load static %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">خروج از سیستم</h3>
+      </div>
+      <div class="panel-body">
+
+        <div class="bs-callout bs-callout-success">
+          <h4>شما با موفقیت از سیستم خارج شدید!</h4>
+          <p>امیدواریم تجربه خوبی داشته باشید.</p>
+        </div>
+
+        <div class="text-center" style="margin-top: 20px;">
+          <a href="{% url 'index' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+          <a href="{% url 'login' %}" class="btn btn-success">ورود مجدد</a>
+        </div>
+
+        <hr>
+
+        <div class="text-center">
+          <p>موفق و پیروز باشید! 🎉</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+{% endblock %}
