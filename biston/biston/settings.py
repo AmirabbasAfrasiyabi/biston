@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'web.apps.WebConfig',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,17 @@ DATABASES = {
     }
 }
 
+# کش سیستم برای بهبود سرعت
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'TIMEOUT': 300,  # 5 دقیقه
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -103,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -119,9 +131,50 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Google reCAPTCHA Settings (for development)
 RECAPTCHA_SECRET_KEY = 'development-test-key'
 RECAPTCHA_SITE_KEY = 'development-test-key'
+
+# لاگ کردن Query های SQL فقط در حالت DEBUG (برای پیدا کردن مشکلات کندی)
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'DEBUG',  # DEBUG برای دیدن تمام Query ها (INFO برای کمتر)
+                'propagate': False,
+            },
+        },
+    }
+
+# بهینه سازی Session
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# بهینه سازی استاتیک فایل‌ها در Development
+if DEBUG:
+    STATICFILES_FINDERS = [
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    ]
+
+
+# Email Configuration (برای ارسال ایمیل وریفای) - uncomment شده برای SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # برای تولید: واقعی ارسال می‌کنه
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # برای تست لوکال: فقط کنسول
+
+# مثال برای Gmail (App Password بساز از Google Account > Security)
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'  # ایمیل فرستنده‌ت رو بگذار
+EMAIL_HOST_PASSWORD = 'your-app-password'  # App Password (نه رمز اصلی) رو بگذار
+DEFAULT_FROM_EMAIL = 'your-email@gmail.com'  # ایمیل پیش‌فرض فرستنده
